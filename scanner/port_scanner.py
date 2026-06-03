@@ -57,12 +57,16 @@ class PortScanner:
                     pass
 
             sock.send(b"\n")
-            banner = sock.recv(1024).decode(errors='ignore').strip()
+            banner = sock.recv(1024).decode(errors='ignore')
             sock.close()
             
             if banner:
-                clean_banner = re.sub(r'[\r\n]', ' ', banner)[:30]
-                return clean_banner
+                # 1. Limpiamos caracteres de control
+                clean_banner = re.sub(r'[\x00-\x1f\x7f]', ' ', banner).strip()
+                # 2. Nos quedamos solo con la primera parte (SSH-2.0-...) 
+                # evitando cualquier residuo tras un espacio
+                clean_banner = clean_banner.split(' ')[0].strip()
+                return clean_banner[:30]
             
             return "Unknown Service"
             
