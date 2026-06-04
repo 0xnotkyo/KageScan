@@ -61,10 +61,7 @@ class PortScanner:
             sock.close()
             
             if banner:
-                # 1. Limpiamos caracteres de control
                 clean_banner = re.sub(r'[\x00-\x1f\x7f]', ' ', banner).strip()
-                # 2. Nos quedamos solo con la primera parte (SSH-2.0-...) 
-                # evitando cualquier residuo tras un espacio
                 clean_banner = clean_banner.split(' ')[0].strip()
                 return clean_banner[:30]
             
